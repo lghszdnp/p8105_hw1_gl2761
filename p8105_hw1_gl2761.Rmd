@@ -1,0 +1,115 @@
+---
+title: "p8105_hw1_gl2761"
+author: "Gonghao Liu"
+date: "9/22/2022"
+output: github_document
+---
+
+```{r, echo = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+## Problem 1
+
+Load the penguin data set
+
+```{r}
+data("penguins", package = "palmerpenguins")
+```
+
+#### Data description:
+The names of variables include: `r names(penguins)`.  
+The important values of variables: `r summary(penguins)`.  
+The penguins dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns.  
+The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)`.  
+
+Making a scatterplot and save it as a .png file.
+
+```{r}
+
+# Make a scatter plot
+penguins_plot = ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) + geom_point()
+
+# Save the scatter plot to project directory
+ggsave("penguins scatter plot.png", penguins_plot)
+
+```
+
+## Problem 2
+
+Creating a data frame.
+
+```{r}
+
+# Set a seed to make sure the randomly generated values are same and reproducible
+
+set.seed(6)
+
+# Create a data frame
+
+problem2_df = tibble(
+  var_num = rnorm(10),
+  var_logical = if_else(var_num > 0, TRUE, FALSE),
+  var_char = c("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"),
+  var_factor = factor(c("A", "B", "C", "A", "B", "C", "A", "B", "C", "A"))
+)
+
+# Call data frame
+
+problem2_df
+
+```
+
+Extracting each variable and calculate means
+
+```{r}
+
+# Extract each variable and calculate means
+
+mean(pull(problem2_df, var_num))
+# The mean of the variable "var_num" is 0.1053582
+
+mean(pull(problem2_df, var_logical))
+# The mean of the variable "var_logical" is 0.7
+
+mean(pull(problem2_df, var_char))
+# 'NA' value returned
+
+mean(pull(problem2_df, var_factor))
+# 'NA' value returned
+
+```
+
+Using as.numeric function to convert logical, character and factor variables, while only logical and factor variables worked.
+
+```{r, eval = FALSE}
+
+# Convert variable to numerical variables and calculate the mean
+
+# Converting character variable to numeric variable
+convert_char = as.numeric(pull(problem2_df, var_char))
+# Call convert_char
+convert_char
+# All elements are "NA"
+
+# Converting factor variable to numeric variable
+convert_factor = as.numeric(pull(problem2_df, var_factor))
+# Call convert_factor
+convert_factor
+# All elements in ext_factor are converted to numeric number "1","2" ,and "3"
+# Getting mean
+mean(convert_factor)
+# Mean = 1.9
+
+# Converting logical variable to numeric variable
+convert_logical = as.numeric(pull(problem2_df, var_logical))
+# Call convert_logcial
+convert_factor
+# Converted to "1 and 0", 1 for TRUE and 0 for FALSE
+# Getting mean
+mean(convert_logical)
+# Mean = 0.7
+
+```
+
+These can explain 'mean' function can only be used on numeric variables.
